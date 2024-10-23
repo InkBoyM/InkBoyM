@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Launcher</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .game-container {
+            text-align: center;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .image {
+            width: 200px;
+            height: auto;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .image::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scaleY(-1);
+            filter: blur(5px);
+            opacity: 0.5;
+        }
+
+        .image:hover {
+            transform: scale(1.1);
+        }
+
+        .text {
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Fullscreen embed container style */
+        #fullscreen-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            display: none; /* Hidden initially */
+        }
+
+        #embed-content {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Fullscreen and Exit Fullscreen buttons */
+        .control-button {
+            position: absolute;
+            top: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 6px 12px; /* Smaller padding */
+            cursor: pointer;
+            font-size: 12px; /* Smaller font size */
+            border-radius: 5px;
+        }
+
+        /* Exit Fullscreen button on the right */
+        #fullscreen-button {
+            right: 10px;
+        }
+
+        /* Device Fullscreen button on the left */
+        #device-fullscreen-button {
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- Shell Shockers Button -->
+        <div class="image-container" onclick="openFullscreen('https://egg.dance')">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZC4BP7qXw0oJNesL8bsnUpe_WzonGy1EBAg&s" alt="Shell Shockers" class="image">
+            <div class="text">Shell Shockers</div>
+        </div>
+        <!-- Shell Shockers Button -->
+        <div class="image-container" onclick="openFullscreen('https://1v1.lol/')">
+            <img src="https://ericcartman421.neocities.org/projects/1v1lol/splash.png" alt="Shell Shockers" class="image">
+            <div class="text">1v1.lol</div>
+        </div>
+
+        <!-- Ice Dodo Button -->
+        <div class="image-container" onclick="openFullscreen('https://icedodo.onionfist.com/singleplayer')">
+            <img src="https://art.pixilart.com/sr2cb7995e694aws3.png" alt="Ice Dodo" class="image">
+            <div class="text">Ice Dodo</div>
+        </div>
+        
+         <!-- Ice Dodo Button -->
+        <div class="image-container" onclick="openFullscreen('https://neal.fun')">
+            <img src="https://preview.redd.it/playing-draw-a-perfect-circle-on-my-circle-happens-to-bear-v0-no9ud9cg4xgb1.jpg?width=640&crop=smart&auto=webp&s=fd41deffbc43cfe330aa8baf3cfc4f079af5c309" alt="Ice Dodo" class="image">
+            <div class="text">Neal.fun</div>
+        </div>
+         <div class="image-container" onclick="openFullscreen('https://paper-io.com/')">
+            <img src="https://www.levelwinner.com/wp-content/uploads/2018/09/paper-io-2-voodoo-400x400.jpg" alt="Ice Dodo" class="image">
+            <div class="text">Paper.io 2</div>
+        </div>
+         <!-- Ice Dodo Button -->
+        <div class="image-container" onclick="openFullscreen('https://skribbl.io/')">
+            <img src="https://imgmedia.lbb.in/media/2020/05/5eb9149cdda0dc33a2fde6bc_1589187740390.jpg" alt="Ice Dodo" class="image">
+            <div class="text">Skribble.io</div>
+    </div>
+
+    <!-- Fullscreen container -->
+    <div id="fullscreen-container">
+        <embed id="embed-content" src="about:blank"></embed>
+        <button id="fullscreen-button" class="control-button" onclick="closeFullscreen()">Exit Fullscreen</button>
+        <button id="device-fullscreen-button" class="control-button" onclick="enterDeviceFullscreen()">Fullscreen</button>
+    </div>
+
+    <script>
+        // Check localStorage for saved fullscreen state
+        document.addEventListener("DOMContentLoaded", function () {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            const embed = document.getElementById('embed-content');
+            const savedState = localStorage.getItem('fullscreenState');
+
+            if (savedState === 'open') {
+                const savedGameUrl = localStorage.getItem('gameUrl');
+                embed.src = savedGameUrl;
+                fullscreenContainer.style.display = 'block';
+            }
+        });
+
+        function openFullscreen(gameUrl) {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            const embed = document.getElementById('embed-content');
+
+            embed.src = gameUrl;
+            fullscreenContainer.style.display = 'block';
+
+            // Save the state and game URL to localStorage
+            localStorage.setItem('fullscreenState', 'open');
+            localStorage.setItem('gameUrl', gameUrl);
+        }
+
+        function closeFullscreen() {
+            const fullscreenContainer = document.getElementById('fullscreen-container');
+            const embed = document.getElementById('embed-content');
+
+            embed.src = 'about:blank'; // Unload the content
+            fullscreenContainer.style.display = 'none';
+
+            // Clear the saved fullscreen state
+            localStorage.setItem('fullscreenState', 'closed');
+            localStorage.removeItem('gameUrl');
+        }
+
+        function enterDeviceFullscreen() {
+            const elem = document.documentElement; // Target the entire document
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
